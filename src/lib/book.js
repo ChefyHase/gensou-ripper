@@ -99,10 +99,11 @@ class Book {
               indexCounter = 0;
 
               k = paragraph[j][i].length;
+            } else {
+              indexCounter++;
             }
-            indexCounter++;
           }
-          // console.log(paragraph[j][i], indexCounter, indexCounter - row * col, row - (paragraph[j][i].length % row));
+          console.log(paragraph[j][i], indexCounter, indexCounter - row * col, row - (paragraph[j][i].length % row));
           indexCounter += row - (paragraph[j][i].length % row);
         }
       }
@@ -168,7 +169,6 @@ class Book {
 
     await page.goto(`file://${tmpfile}`);
 
-    // PDF作成処理
     await page.pdf({
       path: path.resolve(output),
       width: 106,
