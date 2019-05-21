@@ -8,10 +8,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ChefyHase/gensouRipper.git"
+    "url": "git+https://github.com/ChefyHase/gensou-ripper.git"
   },
   "bin": {
-    "gensouRipper": "./bin/gensouRipper.js"
+    "gensou-ripper": "./bin/gensouRipper.js"
   },
   "keywords": [],
   "author": "ChefyHase <chefyhase@gmail.com>",
