@@ -1,5 +1,5 @@
 {
-  "name": "gensouRipper",
+  "name": "gensou-ripper",
   "version": "0.1.1",
   "description": "東方創想話のssを縦書きpdfとして生成する(非公式)。",
   "main": "index.js",
@@ -14,7 +14,7 @@
     "gensouRipper": "./bin/gensouRipper.js"
   },
   "keywords": [],
-  "author": "ChefyHase <ChefyHase@example.com>",
+  "author": "ChefyHase <chefyhase@gmail.com>",
   "license": "ISC",
   "dependencies": {
     "cheerio": "^1.0.0-rc.3",
