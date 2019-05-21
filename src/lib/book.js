@@ -103,7 +103,7 @@ class Book {
               indexCounter++;
             }
           }
-          console.log(paragraph[j][i], indexCounter, indexCounter - row * col, row - (paragraph[j][i].length % row));
+          // console.log(paragraph[j][i], indexCounter, indexCounter - row * col, row - (paragraph[j][i].length % row));
           indexCounter += row - (paragraph[j][i].length % row);
         }
       }
