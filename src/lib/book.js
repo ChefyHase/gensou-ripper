@@ -49,10 +49,13 @@ class Book {
     let parafs = [];
 
     this.body = this.body.replace('<div id="contentBody">', '');
-    this.body = this.body.replace(/\ /g, '　');
-    this.body = this.body.replace(/（/g, ' (');
-    this.body = this.body.replace(/「/g, ' [');
+    this.body = this.body.replace(/<br \/>/g, '<br>');
+    this.body = this.body.replace(/ /g, '');
     this.body = this.body.replace('</div>', '<br><br>');
+    this.body = this.body.replace(/<br>　<br>/g, '<br><br>');
+    this.body = this.body.replace(/<br><br><br><br>/g, '<br><br>');
+    this.body = this.body.replace(/　<br>/g, '<br>');
+    this.body = this.body.replace(/「/g, '_[');
 
     while (true) {
       let index = this.body.search(/\<br\>\<br\>/g);
@@ -67,77 +70,55 @@ class Book {
 
     for (let p of parafs) {
       let paraf = [];
-      let par = p;
+      let par = p.replace(/<br>　/g, '');
+      par = par.replace(/<br>/g, '')
 
       while (true) {
-        let index = par.search(/\<br\>/g);
+        let index = par.search(/\_\[/g);
         if (index === -1) {
-          paraf.push(par);
+          paragraph.push(par);
           break;
         }
-        let sliced = par.substring(0, index);
-        paraf.push(sliced);
-        let replaced = par.replace(sliced + '<br>', '');
-        par = replaced;
-      }
 
-      paragraph.push(paraf);
-    }
-
-    let indexCounter = 0;
-
-    indexCounter += titleOffset * row;
-    for (let j = 0; j < paragraph.length; j++) {
-      for (let i = 0; i < paragraph[j].length; i++) {
-        if (paragraph[j][i] !== '') {
-          for (let k = 0; k < paragraph[j][i].length; k++) {
-            if (indexCounter >= row * col) {
-              let temp = paragraph[j][i].substring(k, paragraph[j][i].length);
-              paragraph[j][i] = paragraph[j][i].substring(0, k);
-              paragraph[j].splice(i + 1, i, temp);
-
-              indexCounter = 0;
-
-              k = paragraph[j][i].length;
-            } else {
-              indexCounter++;
-            }
-          }
-          // console.log(paragraph[j][i], indexCounter, indexCounter - row * col, row - (paragraph[j][i].length % row));
-          indexCounter += row - (paragraph[j][i].length % row);
+        if (par[index - 1] === '」') {
+          let sliced = par.substring(0, index);
+          paragraph.push(sliced);
+          par = par.replace(sliced, '');
         }
+        par = par.replace('_[', '「');
       }
     }
 
-    // console.log(paragraph);
+    let colCounter = titleOffset;
 
-    let constr = [];
-    let praTmp = [];
+    let pages = [];
+    let page = [];
+    let pagenum = 1;
     for (let j = 0; j < paragraph.length; j++) {
-      for (let i = 0; i < paragraph[j].length; i++) {
-        if (paragraph[j][i] !== ('　' || ' ') && (paragraph[j][i][0] == '　' || (paragraph[j][i][0] === ' ' && (paragraph[j][i][1] === '(' || '[')))) {
-          let fixed = paragraph[j][i].replace(/ \(/g, '（');
-          fixed = fixed.replace(/ \[/g, '「');
+      if (paragraph[j] !== '') {
+        let numCol = Math.ceil(paragraph[j].length / row);
+        colCounter += numCol;
 
-          praTmp.push(fixed);
+        if (col < colCounter) {
+          let overCol = colCounter - col;
+          let over = paragraph[j].substring((numCol - overCol) * row, paragraph[j].length);
+          paragraph[j] = paragraph[j].replace(over, '');
+          page.push(paragraph[j]);
+          this.pages.push(new Page(page, this, pagenum));
+
+          // console.log(page);
+
+          page = [];
+          page.push(over);
+          pagenum++;
+
+          colCounter = overCol;
         } else {
-          constr.push(praTmp);
-
-          let page = new Page(constr, this, this.pages.length + 1);
-          this.pages.push(page);
-
-          constr = [];
-          praTmp = [];
-
-          if (paragraph[j][i] !== ('　' || ' ')) {
-            let fixed = paragraph[j][i].replace(/ \(/g, '（');
-            fixed = fixed.replace(/ \[/g, '「');
-
-            praTmp.push(fixed);
-          }
+          page.push(paragraph[j]);
         }
       }
     }
+    this.pages.push(new Page(page, this, pagenum));
   }
 
   arrangement() {

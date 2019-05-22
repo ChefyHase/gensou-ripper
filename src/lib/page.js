@@ -13,7 +13,7 @@ class Page {
     let title = (this.pagenum === 1) ? `<div id="title"> <h1>${this.title}</h1> <h2>${this.author}</h2> </div>` : '';
 
     let parafs = '';
-    for (let i of this.paragraph[0]) {
+    for (let i of this.paragraph) {
       parafs += `<p>${i}</p>`;
     }
 
